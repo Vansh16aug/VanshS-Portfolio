@@ -1,7 +1,10 @@
-const bugbee =
-  "https://res.cloudinary.com/vanshstorage/image/upload/v1743168689/Screenshot_2025-03-26_203555_oa2wa1.png";
-const stackbuddy =
-  "https://res.cloudinary.com/vanshstorage/image/upload/v1743168690/Screenshot_2025-03-26_224114_mfi0fa.png";
+import bugbee from "@/public/image/bugbee.png";
+import stackbuddy from "@/public/image/stackbuddy.png";
+
+// const bugbee =
+//   "https://res.cloudinary.com/vanshstorage/image/upload/v1743168689/Screenshot_2025-03-26_203555_oa2wa1.png";
+// const stackbuddy =
+//   "https://res.cloudinary.com/vanshstorage/image/upload/v1743168690/Screenshot_2025-03-26_224114_mfi0fa.png";
 
 export const projectsData = [
   {
