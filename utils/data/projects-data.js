@@ -1,20 +1,9 @@
-import bugbee from "/public/image/bugbee.png";
-import stackbuddy from "/public/image/stackbuddy.png";
+const bugbee =
+  "https://res.cloudinary.com/vanshstorage/image/upload/v1743168689/Screenshot_2025-03-26_203555_oa2wa1.png";
+const stackbuddy =
+  "https://res.cloudinary.com/vanshstorage/image/upload/v1743168690/Screenshot_2025-03-26_224114_mfi0fa.png";
 
 export const projectsData = [
-  // {
-  //   id: 1,
-  //   name: "ShoeEsy",
-  //   description: [
-  //     "Utilized React, Redux, and Tailwind CSS to develop a dynamic E-commerce platform, achieving a 40% improvement in load time",
-  //     "Implemented carousels, pagination, and sidebar filters for products, boosting user navigation and engagement by 35%",
-  //     "Integrated search suggestions with debouncing, enhancing search efficiency and increasing user satisfaction by 25%",
-  //   ],
-  //   code: "https://github.com/RahulGupta77/ShoeEsy",
-  //   demo: "https://shoe-esy.vercel.app/",
-  //   image: shoeEsy,
-  // },
-
   {
     id: 1,
     name: "BugBee",

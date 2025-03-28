@@ -176,7 +176,7 @@ const SingleProject = ({ project }) => {
         </h2>
         <div className="p-6">
           <Image
-            src={image ? image?.src : placeholder}
+            src={image || placeholder}
             alt={name}
             width={1080}
             height={720}
