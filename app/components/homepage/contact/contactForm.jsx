@@ -1,18 +1,43 @@
 "use client";
-// @flow strict
 import { isValidEmail } from "@/utils/check-email";
 import emailjs from "emailjs-com";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TbMailForward } from "react-icons/tb";
 import { toast } from "react-toastify";
 
+// Helper function to get email counts from localStorage
+const getEmailCounts = () => {
+  if (typeof window !== "undefined") {
+    const counts = localStorage.getItem("emailCounts");
+    return counts ? JSON.parse(counts) : {};
+  }
+  return {};
+};
+
+// Helper function to save email counts to localStorage
+const saveEmailCounts = (counts) => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("emailCounts", JSON.stringify(counts));
+  }
+};
+
 function ContactForm() {
-  const [error, setError] = useState({ email: false, required: false });
+  const [error, setError] = useState({
+    email: false,
+    required: false,
+    limitReached: false,
+  });
   const [userInput, setUserInput] = useState({
     name: "",
     email: "",
     message: "",
   });
+  const [emailCounts, setEmailCounts] = useState({});
+
+  // Load email counts on component mount
+  useEffect(() => {
+    setEmailCounts(getEmailCounts());
+  }, []);
 
   const checkRequired = () => {
     if (userInput.email && userInput.message && userInput.name) {
@@ -30,6 +55,14 @@ function ContactForm() {
       return;
     } else {
       setError({ ...error, required: false });
+    }
+
+    // Check email sending limit
+    const currentCount = emailCounts[userInput.email] || 0;
+    if (currentCount >= 2) {
+      setError({ ...error, limitReached: true });
+      toast.error("You've reached the maximum of 2 messages.");
+      return;
     }
 
     const serviceID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
@@ -51,12 +84,22 @@ function ContactForm() {
       );
 
       if (res.status === 200) {
+        // Update email count
+        const newCount = currentCount + 1;
+        const updatedCounts = {
+          ...emailCounts,
+          [userInput.email]: newCount,
+        };
+        setEmailCounts(updatedCounts);
+        saveEmailCounts(updatedCounts);
+
         toast.success("Message sent successfully!");
         setUserInput({
           name: "",
           email: "",
           message: "",
         });
+        setError({ ...error, limitReached: false });
       } else {
         toast.error("Failed to send message via Email");
       }
@@ -103,9 +146,13 @@ function ContactForm() {
               required={true}
               name="email"
               value={userInput.email}
-              onChange={(e) =>
-                setUserInput({ ...userInput, email: e.target.value })
-              }
+              onChange={(e) => {
+                setUserInput({ ...userInput, email: e.target.value });
+                // Reset limit error when email changes
+                if (error.limitReached) {
+                  setError({ ...error, limitReached: false });
+                }
+              }}
               onBlur={() => {
                 checkRequired();
                 setError({ ...error, email: !isValidEmail(userInput.email) });
@@ -114,6 +161,11 @@ function ContactForm() {
             {error.email && (
               <p className="text-sm text-red-400">
                 Please provide a valid email!
+              </p>
+            )}
+            {error.limitReached && (
+              <p className="text-sm text-red-400">
+                You can only send 2 messages from this email address.
               </p>
             )}
           </div>
@@ -143,6 +195,7 @@ function ContactForm() {
               className="flex items-center gap-1 hover:gap-3 rounded-full bg-gradient-to-r from-pink-500 to-violet-600 px-5 md:px-12 py-2.5 md:py-3 text-center text-xs md:text-sm font-medium uppercase tracking-wider text-white no-underline transition-all duration-200 ease-out hover:text-white hover:no-underline md:font-semibold"
               role="button"
               onClick={handleSendMail}
+              disabled={error.limitReached}
             >
               <span>Send Message</span>
               <TbMailForward className="mt-1" size={18} />
