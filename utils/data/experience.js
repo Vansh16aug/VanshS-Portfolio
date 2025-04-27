@@ -1,8 +1,8 @@
 export const experiences = [
   {
     id: 1,
-    title: "Front End Intern",
-    company: "DrCode",
+    title: "SOFTWARE DEVELOPEMENT ENGINEER",
+    company: "AIRIA, Noida",
     duration: "(Apr 2025 - Present)",
   },
   {
